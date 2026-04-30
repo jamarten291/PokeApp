@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pokeapp/models/pokemon.dart';
 import 'package:pokeapp/services/http_service.dart';
@@ -14,3 +15,18 @@ final pokemonDataProvider =
     }
     return null;
   });
+
+// Provider that gets the favorite pokemon data initialized with an empty list
+final favoritePokemonsProvider = StateNotifierProvider((ref) {
+  return FavoritePokemonsProvider([]);
+});
+
+// StateNotifier that stores a list of strings, which are references to the
+// favorite Pokemons
+class FavoritePokemonsProvider extends StateNotifier<List<String>> {
+  FavoritePokemonsProvider(super._state) {
+    _setup();
+  }
+
+  Future<void> _setup() async {}
+}

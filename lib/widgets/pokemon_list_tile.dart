@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pokeapp/models/pokemon.dart';
-import 'package:pokeapp/providers/pokemon_data_provider.dart';
+import 'package:pokeapp/providers/pokemon_data_providers.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class PokemonListTile extends ConsumerWidget {
