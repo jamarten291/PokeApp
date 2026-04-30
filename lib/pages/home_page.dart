@@ -3,10 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:pokeapp/models/page_data.dart';
 import 'package:pokeapp/models/pokemon.dart';
-import 'package:pokeapp/provider/home_page_provider.dart';
+import 'package:pokeapp/controllers/home_page_controller.dart';
 import 'package:pokeapp/widgets/pokemon_list_tile.dart';
 
-final homePageControllerProvider = StateNotifierProvider((ref) {
+// Provider that uses the HomePageController to get the data.
+final homePageControllerProvider =
+    StateNotifierProvider<HomePageController, HomePageData>((ref) {
   return HomePageController(HomePageData.initial());
 });
 
@@ -76,6 +78,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               itemBuilder: (context, index) {
                 PokemonListResult currentPokemon = _homePageData.data!.results![index];
                 String pokemonUrl = currentPokemon.url ?? '';
+                // Pass the pokemon url to the PokemonListTile widget.
                 return PokemonListTile(
                   pokemonUrl: pokemonUrl
                 );
