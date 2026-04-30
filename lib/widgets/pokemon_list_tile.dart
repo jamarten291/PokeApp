@@ -29,6 +29,14 @@ class PokemonListTile extends ConsumerWidget {
     return Skeletonizer(
       enabled: isLoading,
       child: ListTile(
+        // If the pokemon is not null, show the pokemon image.
+        leading: pokemon != null
+            ? CircleAvatar(
+                backgroundImage: NetworkImage(
+                  pokemon.sprites!.frontDefault!,
+                ),
+              )
+            : CircleAvatar(),
         title: Text(
           // If the pokemon is null, return an empty string.
           pokemon?.name!.toUpperCase()
@@ -39,6 +47,12 @@ class PokemonListTile extends ConsumerWidget {
         ),
         subtitle: Text(
           "Has ${pokemon?.moves?.length.toString() ?? '0'} moves."
+        ),
+        trailing: IconButton(
+          onPressed: () {},
+          icon: Icon(
+            Icons.favorite_border,
+          ),
         ),
       ),
     );
