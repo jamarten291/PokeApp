@@ -1,18 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
+import 'package:pokeapp/models/page_data.dart';
+import 'package:pokeapp/models/pokemon.dart';
+import 'package:pokeapp/provider/home_page_provider.dart';
+import 'package:pokeapp/widgets/pokemon_list_tile.dart';
 
-class HomePage extends StatefulWidget {
+final homePageControllerProvider = StateNotifierProvider((ref) {
+  return HomePageController(HomePageData.initial());
+});
+
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends ConsumerState<HomePage> {
+  late HomePageController _homePageController;
+  late HomePageData _homePageData;
+
   @override
   Widget build(BuildContext context) {
+    _homePageController = ref.watch(homePageControllerProvider.notifier);
+    _homePageData = ref.watch(homePageControllerProvider);
+
     return Scaffold(
       appBar: AppBar(
-          title: const Text('All Pokemons'),
+        title: const Text('PokeApp'),
       ),
       body: _buildUI(context),
     );
@@ -30,11 +46,13 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
+                _allPokemonsList(
+                  context,
+                ),
               ],
             ),
           ),
-        )
+        ),
     );
   }
 
@@ -54,9 +72,13 @@ class _HomePageState extends State<HomePage> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.60,
             child: ListView.builder(
-              itemCount: 0,
+              itemCount: _homePageData.data?.results?.length ?? 0,
               itemBuilder: (context, index) {
-                return ListTile();
+                PokemonListResult currentPokemon = _homePageData.data!.results![index];
+                String pokemonUrl = currentPokemon.url ?? '';
+                return PokemonListTile(
+                  pokemonUrl: pokemonUrl
+                );
               }
             ),
           )
