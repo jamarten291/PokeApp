@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pokeapp/models/pokemon.dart';
 import 'package:pokeapp/providers/pokemon_data_providers.dart';
+import 'package:pokeapp/widgets/pokemon_stats_card.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class PokemonListTile extends ConsumerWidget {
@@ -36,39 +37,49 @@ class PokemonListTile extends ConsumerWidget {
   Widget _tile(BuildContext context, Pokemon? pokemon, bool isLoading) {
     return Skeletonizer(
       enabled: isLoading,
-      child: ListTile(
-        // If the pokemon is not null, show the pokemon image.
-        leading: pokemon != null
-            ? CircleAvatar(
-                backgroundImage: NetworkImage(
-                  pokemon.sprites!.frontDefault!,
-                ),
-              )
-            : CircleAvatar(),
-        title: Text(
-          // If the pokemon is null, return an empty string.
-          pokemon?.name!.toUpperCase()
-              ?? 'Currently loading name for Pokemon.',
-          style: const TextStyle(
-            fontSize: 20,
+      child: GestureDetector(
+        onTap: () {
+          if (!isLoading) {
+            showDialog(
+              context: context,
+              builder: (context) => PokemonStatsCard(pokemonUrl: pokemonUrl)
+            );
+          }
+        },
+        child: ListTile(
+          // If the pokemon is not null, show the pokemon image.
+          leading: pokemon != null
+              ? CircleAvatar(
+                  backgroundImage: NetworkImage(
+                    pokemon.sprites!.frontDefault!,
+                  ),
+                )
+              : CircleAvatar(),
+          title: Text(
+            // If the pokemon is null, return an empty string.
+            pokemon?.name!.toUpperCase()
+                ?? 'Currently loading name for Pokemon.',
+            style: const TextStyle(
+              fontSize: 20,
+            ),
           ),
-        ),
-        subtitle: Text(
-          "Has ${pokemon?.moves?.length.toString() ?? '0'} moves."
-        ),
-        trailing: IconButton(
-          onPressed: () {
-            if (_favoritePokemons.contains(pokemonUrl)) {
-              _favoritePokemonsProvider.removeFavoritePokemon(pokemonUrl);
-            } else {
-              _favoritePokemonsProvider.addFavoritePokemon(pokemonUrl);
-            }
-          },
-          icon: Icon(
-            _favoritePokemons.contains(pokemonUrl)
-              ? Icons.favorite
-              : Icons.favorite_border,
-            color: Colors.red,
+          subtitle: Text(
+            "Has ${pokemon?.moves?.length.toString() ?? '0'} moves."
+          ),
+          trailing: IconButton(
+            onPressed: () {
+              if (_favoritePokemons.contains(pokemonUrl)) {
+                _favoritePokemonsProvider.removeFavoritePokemon(pokemonUrl);
+              } else {
+                _favoritePokemonsProvider.addFavoritePokemon(pokemonUrl);
+              }
+            },
+            icon: Icon(
+              _favoritePokemons.contains(pokemonUrl)
+                ? Icons.favorite
+                : Icons.favorite_border,
+              color: Colors.red,
+            ),
           ),
         ),
       ),
