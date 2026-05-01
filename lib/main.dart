@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pokeapp/pages/home_page.dart';
+import 'package:pokeapp/services/database_service.dart';
 import 'package:pokeapp/services/http_service.dart';
 import 'package:get_it/get_it.dart';
 
@@ -13,6 +14,9 @@ void main() async {
 Future<void> _setupServices() async {
   GetIt.instance.registerSingleton<HTTPService>(
     HTTPService(),
+  );
+  GetIt.instance.registerSingleton<DatabaseService>(
+    DatabaseService(),
   );
 }
 

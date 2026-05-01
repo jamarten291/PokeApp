@@ -6,8 +6,10 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 class PokemonListTile extends ConsumerWidget {
   final String pokemonUrl;
+  late FavoritePokemonsProvider _favoritePokemonsProvider;
+  late List<String> _favoritePokemons;
 
-  const PokemonListTile({
+  PokemonListTile({
     super.key,
     required this.pokemonUrl
   });
@@ -15,6 +17,12 @@ class PokemonListTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Get the pokemon data from the provider.
+    _favoritePokemonsProvider = ref.watch(
+      favoritePokemonsProvider.notifier,
+    );
+    _favoritePokemons = ref.watch(
+      favoritePokemonsProvider,
+    );
     final pokemon = ref.watch(pokemonDataProvider(pokemonUrl));
 
     // Handle the different states of the pokemon data.
@@ -49,9 +57,18 @@ class PokemonListTile extends ConsumerWidget {
           "Has ${pokemon?.moves?.length.toString() ?? '0'} moves."
         ),
         trailing: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            if (_favoritePokemons.contains(pokemonUrl)) {
+              _favoritePokemonsProvider.removeFavoritePokemon(pokemonUrl);
+            } else {
+              _favoritePokemonsProvider.addFavoritePokemon(pokemonUrl);
+            }
+          },
           icon: Icon(
-            Icons.favorite_border,
+            _favoritePokemons.contains(pokemonUrl)
+              ? Icons.favorite
+              : Icons.favorite_border,
+            color: Colors.red,
           ),
         ),
       ),
